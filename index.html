@@ -15,14 +15,12 @@
   .badge { margin-left: auto; font-size: 11px; background: #015AFF22; color: #60a5fa; border: 1px solid #015AFF44; border-radius: 20px; padding: 3px 10px; white-space: nowrap; }
   .card { background: #131929; border: 1px solid #1e293b; border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; }
   label { display: block; font-size: 12px; font-weight: 500; color: #64748b; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
-  textarea, input[type="text"], input[type="password"], select { width: 100%; background: #0d1422; border: 1px solid #1e293b; border-radius: 10px; color: #e2e8f0; font-size: 14px; font-family: inherit; padding: 12px 14px; outline: none; transition: border-color 0.2s; resize: vertical; }
+  textarea, input[type="text"], select { width: 100%; background: #0d1422; border: 1px solid #1e293b; border-radius: 10px; color: #e2e8f0; font-size: 14px; font-family: inherit; padding: 12px 14px; outline: none; transition: border-color 0.2s; resize: vertical; }
   textarea:focus, input:focus, select:focus { border-color: #015AFF; }
   textarea { line-height: 1.6; }
   select { cursor: pointer; resize: none; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
   @media (max-width: 500px) { .row { grid-template-columns: 1fr; } }
-  .api-hint { font-size: 12px; color: #475569; margin-top: 6px; line-height: 1.5; }
-  .api-hint a { color: #60a5fa; text-decoration: none; }
   .btn-primary { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 1rem; background: #015AFF; color: #fff; border: none; border-radius: 10px; padding: 13px 20px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
   .btn-primary:hover { background: #0047cc; }
   .btn-primary:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
@@ -36,7 +34,7 @@
   .action-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
   .btn-sm { background: transparent; color: #64748b; border: 1px solid #1e293b; border-radius: 8px; padding: 6px 14px; font-size: 13px; cursor: pointer; font-family: inherit; }
   .btn-sm:hover { background: #1e293b; color: #94a3b8; }
-  .error-box { display: none; background: #2d0f0f; border: 1px solid #7f1d1d; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #fca5a5; margin-top: 1rem; line-height: 1.6; white-space: pre-wrap; font-family: monospace; }
+  .error-box { display: none; background: #2d0f0f; border: 1px solid #7f1d1d; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #fca5a5; margin-top: 1rem; line-height: 1.6; white-space: pre-wrap; }
   .quick-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
   .chip { background: #1e293b; color: #94a3b8; border: 1px solid #334155; border-radius: 20px; padding: 4px 12px; font-size: 12px; cursor: pointer; }
   .chip:hover { background: #015AFF22; color: #60a5fa; border-color: #015AFF44; }
@@ -53,13 +51,6 @@
       <h1>EQServers Reply Assistant</h1>
       <p>AI-powered chat replies for your support workflow</p>
     </div>
-    <div class="badge">⚡ Claude AI</div>
-  </div>
-
-  <div class="card">
-    <label>🔑 Anthropic API Key</label>
-    <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" />
-    <p class="api-hint">Get your free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys → Create Key</p>
   </div>
 
   <div class="card">
@@ -112,6 +103,11 @@
 </div>
 
 <script>
+// =============================================
+// PASTE YOUR ANTHROPIC API KEY HERE BELOW
+const API_KEY = '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';
+// =============================================
+
 const SYSTEM_PROMPT = `You are a helpful, professional sales and support agent for EQServers (eqservers.com), a dedicated bare metal server hosting company.
 
 ABOUT EQSERVERS:
@@ -127,6 +123,8 @@ EXAMPLE SERVERS:
 - NL-109: Intel Xeon E-2286G, 32GB RAM, 1x 960GB NVMe + 4x 8TB SATA, 100TB bandwidth, 10Gbps — $159/mo
 - CA-709: 2x AMD EPYC 7402, 256GB RAM, 2x 1TB SSD + 10x 24TB SATA, 200TB bandwidth, 10Gbps — $495/mo
 
+USE CASES: Gaming, video streaming & CDN, AI/ML, SaaS, e-commerce, high-bandwidth apps, storage, VoIP/VPN.
+
 Write ONLY the reply message — no notes or explanation before or after.`;
 
 function fillChip(text) {
@@ -136,58 +134,11 @@ function fillChip(text) {
 
 function setStatus(msg) { document.getElementById('status').textContent = msg; }
 
-async function tryFetch(apiKey, payload) {
-  // Direct call first
-  try {
-    setStatus('Trying direct connection…');
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json();
-    if (data.error) throw new Error('API error: ' + data.error.message + ' (type: ' + data.error.type + ')');
-    return data;
-  } catch(e) {
-    if (e.message.startsWith('API error:')) throw e; // real API error, don't try proxies
-    console.warn('Direct failed:', e.message);
-  }
-
-  // Proxy fallback
-  try {
-    setStatus('Trying proxy connection…');
-    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://api.anthropic.com/v1/messages');
-    const res = await fetch(proxyUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json();
-    if (data.error) throw new Error('API error: ' + data.error.message + ' (type: ' + data.error.type + ')');
-    return data;
-  } catch(e) {
-    if (e.message.startsWith('API error:')) throw e;
-    console.warn('Proxy failed:', e.message);
-    throw new Error('Network blocked: ' + e.message);
-  }
-}
-
 async function generateReply() {
-  const apiKey = document.getElementById('apiKey').value.trim();
   const msg = document.getElementById('customerMsg').value.trim();
   const name = document.getElementById('agentName').value.trim();
   const tone = document.getElementById('tone').value;
 
-  if (!apiKey) { showError('Please enter your Anthropic API key above.'); return; }
   if (!msg) { showError('Please paste a customer message first.'); return; }
 
   hideError();
@@ -213,14 +164,26 @@ async function generateReply() {
   };
 
   try {
-    const data = await tryFetch(apiKey, payload);
+    setStatus('Connecting…');
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
     const reply = data.content.map(b => b.text || '').join('').trim();
     document.getElementById('replyText').textContent = reply;
     document.getElementById('replyCard').style.display = 'block';
     setStatus('');
   } catch(e) {
     setStatus('');
-    showError('❌ Error details:\n' + e.message + '\n\nShare this error with support to get help.');
+    showError('❌ Error: ' + e.message);
   }
 
   document.getElementById('generateBtn').disabled = false;
