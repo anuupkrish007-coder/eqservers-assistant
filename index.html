@@ -12,15 +12,15 @@
   .logo { width: 44px; height: 44px; background: #015AFF; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; }
   .header-text h1 { font-size: 18px; font-weight: 600; color: #f1f5f9; }
   .header-text p { font-size: 13px; color: #64748b; margin-top: 2px; }
-  .badge { margin-left: auto; font-size: 11px; background: #015AFF22; color: #60a5fa; border: 1px solid #015AFF44; border-radius: 20px; padding: 3px 10px; white-space: nowrap; }
   .card { background: #131929; border: 1px solid #1e293b; border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; }
   label { display: block; font-size: 12px; font-weight: 500; color: #64748b; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
-  textarea, input[type="text"], select { width: 100%; background: #0d1422; border: 1px solid #1e293b; border-radius: 10px; color: #e2e8f0; font-size: 14px; font-family: inherit; padding: 12px 14px; outline: none; transition: border-color 0.2s; resize: vertical; }
+  textarea, input[type="text"], input[type="password"], select { width: 100%; background: #0d1422; border: 1px solid #1e293b; border-radius: 10px; color: #e2e8f0; font-size: 14px; font-family: inherit; padding: 12px 14px; outline: none; transition: border-color 0.2s; resize: vertical; }
   textarea:focus, input:focus, select:focus { border-color: #015AFF; }
   textarea { line-height: 1.6; }
   select { cursor: pointer; resize: none; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
   @media (max-width: 500px) { .row { grid-template-columns: 1fr; } }
+  .api-hint { font-size: 12px; color: #475569; margin-top: 6px; line-height: 1.5; }
   .btn-primary { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 1rem; background: #015AFF; color: #fff; border: none; border-radius: 10px; padding: 13px 20px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
   .btn-primary:hover { background: #0047cc; }
   .btn-primary:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
@@ -51,7 +51,12 @@
       <h1>EQServers Reply Assistant</h1>
       <p>AI-powered chat replies for your support workflow</p>
     </div>
+  </div>
 
+  <div class="card">
+    <label>🔑 API Key</label>
+    <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" />
+    <p class="api-hint">Paste the key shared by your team lead. It stays only on your device.</p>
   </div>
 
   <div class="card">
@@ -104,11 +109,6 @@
 </div>
 
 <script>
-// =============================================
-// PASTE YOUR ANTHROPIC API KEY HERE BELOW
-const API_KEY = 'YOUR_API_KEY_HERE';
-// =============================================
-
 const SYSTEM_PROMPT = `You are a helpful, professional sales and support agent for EQServers (eqservers.com), a dedicated bare metal server hosting company.
 
 ABOUT EQSERVERS:
@@ -136,10 +136,12 @@ function fillChip(text) {
 function setStatus(msg) { document.getElementById('status').textContent = msg; }
 
 async function generateReply() {
+  const apiKey = document.getElementById('apiKey').value.trim();
   const msg = document.getElementById('customerMsg').value.trim();
   const name = document.getElementById('agentName').value.trim();
   const tone = document.getElementById('tone').value;
 
+  if (!apiKey) { showError('Please enter the API key above.'); return; }
   if (!msg) { showError('Please paste a customer message first.'); return; }
 
   hideError();
@@ -170,7 +172,7 @@ async function generateReply() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
         'anthropic-dangerous-direct-browser-access': 'true'
       },
