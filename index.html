@@ -6,29 +6,16 @@
 <title>EQServers Reply Assistant</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: #0a0e1a;
-    color: #e2e8f0;
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 2rem 1rem;
-  }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0e1a; color: #e2e8f0; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; }
   .container { width: 100%; max-width: 680px; }
   .header { display: flex; align-items: center; gap: 14px; margin-bottom: 2rem; }
   .logo { width: 44px; height: 44px; background: #015AFF; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; }
-  .header-text h1 { font-size: 18px; font-weight: 600; color: #f1f5f9; letter-spacing: -0.3px; }
+  .header-text h1 { font-size: 18px; font-weight: 600; color: #f1f5f9; }
   .header-text p { font-size: 13px; color: #64748b; margin-top: 2px; }
   .badge { margin-left: auto; font-size: 11px; background: #015AFF22; color: #60a5fa; border: 1px solid #015AFF44; border-radius: 20px; padding: 3px 10px; white-space: nowrap; }
   .card { background: #131929; border: 1px solid #1e293b; border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; }
   label { display: block; font-size: 12px; font-weight: 500; color: #64748b; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
-  textarea, input[type="text"], input[type="password"], select {
-    width: 100%; background: #0d1422; border: 1px solid #1e293b; border-radius: 10px;
-    color: #e2e8f0; font-size: 14px; font-family: inherit;
-    padding: 12px 14px; outline: none; transition: border-color 0.2s; resize: vertical;
-  }
+  textarea, input[type="text"], input[type="password"], select { width: 100%; background: #0d1422; border: 1px solid #1e293b; border-radius: 10px; color: #e2e8f0; font-size: 14px; font-family: inherit; padding: 12px 14px; outline: none; transition: border-color 0.2s; resize: vertical; }
   textarea:focus, input:focus, select:focus { border-color: #015AFF; }
   textarea { line-height: 1.6; }
   select { cursor: pointer; resize: none; }
@@ -36,30 +23,22 @@
   @media (max-width: 500px) { .row { grid-template-columns: 1fr; } }
   .api-hint { font-size: 12px; color: #475569; margin-top: 6px; line-height: 1.5; }
   .api-hint a { color: #60a5fa; text-decoration: none; }
-  .api-hint a:hover { text-decoration: underline; }
-  .btn-primary {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; margin-top: 1rem; background: #015AFF; color: #fff;
-    border: none; border-radius: 10px; padding: 13px 20px;
-    font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.1s;
-  }
+  .btn-primary { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 1rem; background: #015AFF; color: #fff; border: none; border-radius: 10px; padding: 13px 20px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
   .btn-primary:hover { background: #0047cc; }
-  .btn-primary:active { transform: scale(0.98); }
-  .btn-primary:disabled { background: #1e293b; color: #475569; cursor: not-allowed; transform: none; }
+  .btn-primary:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
   .spinner { width: 18px; height: 18px; border: 2px solid #ffffff44; border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .reply-card { display: none; background: #0d1422; border: 1px solid #015AFF44; border-radius: 12px; padding: 1.25rem; margin-top: 1rem; }
   .reply-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
   .reply-label { font-size: 12px; font-weight: 500; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.6px; }
-  .btn-copy { display: flex; align-items: center; gap: 6px; background: #015AFF22; color: #60a5fa; border: 1px solid #015AFF44; border-radius: 8px; padding: 5px 12px; font-size: 12px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
-  .btn-copy:hover { background: #015AFF44; }
+  .btn-copy { display: flex; align-items: center; gap: 6px; background: #015AFF22; color: #60a5fa; border: 1px solid #015AFF44; border-radius: 8px; padding: 5px 12px; font-size: 12px; font-weight: 500; cursor: pointer; }
   .reply-text { font-size: 14px; line-height: 1.75; color: #cbd5e1; white-space: pre-wrap; }
   .action-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-  .btn-sm { display: flex; align-items: center; gap: 6px; background: transparent; color: #64748b; border: 1px solid #1e293b; border-radius: 8px; padding: 6px 14px; font-size: 13px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+  .btn-sm { background: transparent; color: #64748b; border: 1px solid #1e293b; border-radius: 8px; padding: 6px 14px; font-size: 13px; cursor: pointer; font-family: inherit; }
   .btn-sm:hover { background: #1e293b; color: #94a3b8; }
-  .error-box { display: none; background: #2d0f0f; border: 1px solid #7f1d1d; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #fca5a5; margin-top: 1rem; line-height: 1.6; white-space: pre-wrap; }
+  .error-box { display: none; background: #2d0f0f; border: 1px solid #7f1d1d; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #fca5a5; margin-top: 1rem; line-height: 1.6; white-space: pre-wrap; font-family: monospace; }
   .quick-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-  .chip { background: #1e293b; color: #94a3b8; border: 1px solid #334155; border-radius: 20px; padding: 4px 12px; font-size: 12px; cursor: pointer; transition: all 0.15s; }
+  .chip { background: #1e293b; color: #94a3b8; border: 1px solid #334155; border-radius: 20px; padding: 4px 12px; font-size: 12px; cursor: pointer; }
   .chip:hover { background: #015AFF22; color: #60a5fa; border-color: #015AFF44; }
   .divider { height: 1px; background: #1e293b; margin: 1.5rem 0; }
   .footer { text-align: center; font-size: 12px; color: #334155; margin-top: 1.5rem; }
@@ -68,7 +47,6 @@
 </head>
 <body>
 <div class="container">
-
   <div class="header">
     <div class="logo">🖥️</div>
     <div class="header-text">
@@ -81,15 +59,12 @@
   <div class="card">
     <label>🔑 Anthropic API Key</label>
     <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" />
-    <p class="api-hint">
-      Get your free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys → Create Key
-    </p>
+    <p class="api-hint">Get your free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys → Create Key</p>
   </div>
 
   <div class="card">
     <label>Customer message</label>
     <textarea id="customerMsg" rows="5" placeholder="Paste the customer's chat message here…&#10;&#10;e.g. Hi, do you have servers in Europe? What are the prices?"></textarea>
-
     <div class="quick-chips">
       <span class="chip" onclick="fillChip('Do you have servers in the Netherlands?')">NL servers</span>
       <span class="chip" onclick="fillChip('What are your dedicated server prices?')">Pricing</span>
@@ -100,9 +75,7 @@
       <span class="chip" onclick="fillChip('What is your uptime guarantee?')">Uptime SLA</span>
       <span class="chip" onclick="fillChip('Do you have any discounts or promo codes?')">Discounts</span>
     </div>
-
     <div class="divider"></div>
-
     <div class="row">
       <div>
         <label>Your name (optional)</label>
@@ -117,15 +90,12 @@
         </select>
       </div>
     </div>
-
     <button class="btn-primary" id="generateBtn" onclick="generateReply()">
       <div class="spinner" id="spinner"></div>
       <span id="btnText">✨ Generate reply</span>
     </button>
     <div class="status" id="status"></div>
-
     <div class="error-box" id="errorBox"></div>
-
     <div class="reply-card" id="replyCard">
       <div class="reply-header">
         <span class="reply-label">✅ Ready to send</span>
@@ -138,52 +108,26 @@
       </div>
     </div>
   </div>
-
   <div class="footer">EQServers.com · For internal support use only</div>
 </div>
 
 <script>
-const SYSTEM_PROMPT = `You are a helpful, professional sales and support agent for EQServers (eqservers.com), a dedicated bare metal server hosting company. Your job is to write friendly, concise, accurate chat replies to customer inquiries.
+const SYSTEM_PROMPT = `You are a helpful, professional sales and support agent for EQServers (eqservers.com), a dedicated bare metal server hosting company.
 
 ABOUT EQSERVERS:
-- Sells bare metal dedicated servers only (no VPS or shared hosting)
+- Bare metal dedicated servers only (no VPS or shared hosting)
 - Locations: Netherlands (Haarlem), USA (Manassas, VA), Germany, Canada (Montreal)
 - Network: 10Gbps and 25Gbps ports, unmetered or high-bandwidth options
 - Uptime: 99.9% SLA, 24/7/365 support
-- All servers come with free setup
-- New customer coupon: FIRSTTIME (5% off first order, full-price items only)
+- Free setup on all servers
+- New customer coupon: FIRSTTIME (5% off first order)
 
 EXAMPLE SERVERS:
 - NL-101: Intel Xeon E3-1230v2, 32GB RAM, 2x 2TB SATA, 10TB bandwidth, 1Gbps — $29/mo
-- NL-109: Intel Xeon E-2286G (hexa-core), 32GB RAM, 1x 960GB NVMe + 4x 8TB SATA, 100TB bandwidth, 10Gbps — $159/mo
+- NL-109: Intel Xeon E-2286G, 32GB RAM, 1x 960GB NVMe + 4x 8TB SATA, 100TB bandwidth, 10Gbps — $159/mo
 - CA-709: 2x AMD EPYC 7402, 256GB RAM, 2x 1TB SSD + 10x 24TB SATA, 200TB bandwidth, 10Gbps — $495/mo
 
-USE CASES: Gaming, video streaming & CDN, AI/ML, SaaS, e-commerce, high-bandwidth apps, storage, VoIP/VPN.
-
-Write ONLY the reply message — no notes, no explanation before or after.`;
-
-const PROXIES = [
-  (key, body) => fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-calls': 'true' },
-    body: JSON.stringify(body)
-  }),
-  (key, body) => fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.anthropic.com/v1/messages'), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify(body)
-  }),
-  (key, body) => fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.anthropic.com/v1/messages'), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify(body)
-  }),
-  (key, body) => fetch('https://cors-anywhere.herokuapp.com/https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'X-Requested-With': 'XMLHttpRequest' },
-    body: JSON.stringify(body)
-  })
-];
+Write ONLY the reply message — no notes or explanation before or after.`;
 
 function fillChip(text) {
   document.getElementById('customerMsg').value = text;
@@ -191,6 +135,51 @@ function fillChip(text) {
 }
 
 function setStatus(msg) { document.getElementById('status').textContent = msg; }
+
+async function tryFetch(apiKey, payload) {
+  // Direct call first
+  try {
+    setStatus('Trying direct connection…');
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-calls': 'true'
+      },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.error) throw new Error('API error: ' + data.error.message + ' (type: ' + data.error.type + ')');
+    return data;
+  } catch(e) {
+    if (e.message.startsWith('API error:')) throw e; // real API error, don't try proxies
+    console.warn('Direct failed:', e.message);
+  }
+
+  // Proxy fallback
+  try {
+    setStatus('Trying proxy connection…');
+    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://api.anthropic.com/v1/messages');
+    const res = await fetch(proxyUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.error) throw new Error('API error: ' + data.error.message + ' (type: ' + data.error.type + ')');
+    return data;
+  } catch(e) {
+    if (e.message.startsWith('API error:')) throw e;
+    console.warn('Proxy failed:', e.message);
+    throw new Error('Network blocked: ' + e.message);
+  }
+}
 
 async function generateReply() {
   const apiKey = document.getElementById('apiKey').value.trim();
@@ -209,12 +198,12 @@ async function generateReply() {
 
   const toneMap = {
     friendly: 'Be friendly, warm, and professional.',
-    formal: 'Be formal and corporate. Use polished language.',
-    brief: 'Be very brief and direct. 2-3 sentences max.'
+    formal: 'Be formal and corporate.',
+    brief: 'Be very brief. 2-3 sentences max.'
   };
 
   const sig = name ? `\n\nBest regards,\n${name}\nEQServers Support Team` : '\n\nBest regards,\nEQServers Support Team';
-  const userPrompt = `Customer message: "${msg}"\n\nTone: ${toneMap[tone]}\n\nEnd your reply with this signature:${sig}`;
+  const userPrompt = `Customer message: "${msg}"\n\nTone: ${toneMap[tone]}\n\nEnd with:${sig}`;
 
   const payload = {
     model: 'claude-sonnet-4-20250514',
@@ -223,33 +212,15 @@ async function generateReply() {
     messages: [{ role: 'user', content: userPrompt }]
   };
 
-  let success = false;
-  for (let i = 0; i < PROXIES.length; i++) {
-    try {
-      setStatus(`Connecting… (attempt ${i + 1} of ${PROXIES.length})`);
-      const res = await PROXIES[i](apiKey, payload);
-      const data = await res.json();
-      if (data.error) throw new Error(data.error.message);
-      const reply = data.content.map(b => b.text || '').join('').trim();
-      document.getElementById('replyText').textContent = reply;
-      document.getElementById('replyCard').style.display = 'block';
-      setStatus('');
-      success = true;
-      break;
-    } catch (e) {
-      console.warn(`Proxy ${i + 1} failed:`, e.message);
-    }
-  }
-
-  if (!success) {
+  try {
+    const data = await tryFetch(apiKey, payload);
+    const reply = data.content.map(b => b.text || '').join('').trim();
+    document.getElementById('replyText').textContent = reply;
+    document.getElementById('replyCard').style.display = 'block';
     setStatus('');
-    showError(
-      '❌ All connection methods failed.\n\n' +
-      'Please try one of these:\n' +
-      '1. Open the file in Google Chrome (most reliable)\n' +
-      '2. Check your internet connection\n' +
-      '3. Make sure your API key is correct (starts with sk-ant-)'
-    );
+  } catch(e) {
+    setStatus('');
+    showError('❌ Error details:\n' + e.message + '\n\nShare this error with support to get help.');
   }
 
   document.getElementById('generateBtn').disabled = false;
