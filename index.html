@@ -206,7 +206,7 @@ async function generateReply() {
   const userPrompt = `Customer message: "${msg}"\n\nTone: ${toneMap[tone]}\n\nEnd with:${sig}`;
 
   const payload = {
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-5',
     max_tokens: 1000,
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: userPrompt }]
